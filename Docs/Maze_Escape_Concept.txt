@@ -1,0 +1,10 @@
+Maze escape
+
+Navigate the maze while avoiding traps and collecting key fragments to aid your escape
+
+Arrow traps:
+    Regularly shoots arrows that will kill the player and restart the game
+Key fragments:
+    Collecting all of these will change the color of the door and allow you to pass through and win
+Golden coins:
+    Extra collectibles for extra gratification or adding to some score
