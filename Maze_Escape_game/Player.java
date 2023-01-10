@@ -15,6 +15,9 @@ public class Player {
     private Point pos;
     // keep track of the player's score
     private int score;
+    // recording movement to stop character at walls
+    private int lastMove;
+    private int lastAxis;
 
     public Player() {
         // load the assets
@@ -52,36 +55,54 @@ public class Player {
         // every keyboard get has a certain code. get the value of that code from the
         // keyboard event so that we can compare it to KeyEvent constants
         int key = e.getKeyCode();
-        System.out.println(key);
         // depending on which arrow key was pressed, we're going to move the player by
         // one whole tile for this input
         // Arrow keys and WASD keys
         switch (key) {
             case (KeyEvent.VK_UP):
-                pos.translate(0, -1);
-                break;
+                // pos.translate(0, -1);
+                // lastMove = 1;
+                // lastAxis = 0;
+                // break;
             case (KeyEvent.VK_W):
                 pos.translate(0, -1);
+                lastMove = 1;
+                lastAxis = 0;
                 break;
             case (KeyEvent.VK_LEFT):
                 pos.translate(-1, 0);
+                lastMove = 1;
+                lastAxis = 1;
                 break;
             case (KeyEvent.VK_A):
                 pos.translate(-1, 0);
+                lastMove = 1;
+                lastAxis = 1;
                 break;
             case (KeyEvent.VK_DOWN):
                 pos.translate(0, 1);
+                lastMove = -1;
+                lastAxis = 0;
                 break;
             case (KeyEvent.VK_S):
                 pos.translate(0, 1);
+                lastMove = -1;
+                lastAxis = 0;
                 break;
             case (KeyEvent.VK_RIGHT):
                 pos.translate(1, 0);
+                lastMove = -1;
+                lastAxis = 1;
                 break;
             case (KeyEvent.VK_D):
                 pos.translate(1, 0);
+                lastMove = -1;
+                lastAxis = 1;
                 break;
-        }
+            }
+        System.out.println(lastMove);
+        System.out.println(lastAxis);
+        System.out.println("bababooey");
     }
 
     public void tick() {
@@ -100,6 +121,7 @@ public class Player {
         } else if (pos.y >= Board.ROWS) {
             pos.y = Board.ROWS - 1;
         }
+
     }
 
     public String getScore() {
