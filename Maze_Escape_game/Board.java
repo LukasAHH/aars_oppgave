@@ -25,7 +25,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     private ArrayList<Coin> coins;
     // coin initial value and inflation rate
     private float coinValue = 100f;
-    private float inflationRate = 1.0f;
+    private float inflationRate = 1.02f;
     private int coinScore;
 
     public Board() {
@@ -164,8 +164,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         }
         private void collectCoins() {
             // allow player to pickup coins
-            ArrayList<Coin> collectedCoins = new ArrayList<>();
-            // Random rand = new Random();
+            // ArrayList<Coin> collectedCoins = new ArrayList<>();
+            Random rand = new Random();
 
             for (Coin coin : coins) {
                 // if the player is on the same tile as a coin, collect it
@@ -173,19 +173,20 @@ public class Board extends JPanel implements ActionListener, KeyListener {
                     // give the player some points for picking this up
                     coinScore = (int) coinValue;
                     player.addScore(coinScore);
-                    collectedCoins.add(coin);
+                    // collectedCoins.add(coin);
                     coinValue = coinValue * inflationRate;
                     System.out.print(coin);
                     System.out.print(" ");
                     System.out.println(coin.pos);
                     
-                    // coin.pos.x = rand.nextInt(COLUMNS);
-                    // coin.pos.y = rand.nextInt(ROWS);
+                    // move coin to new spot to simulate it respawning
+                    coin.pos.x = rand.nextInt(COLUMNS);
+                    coin.pos.y = rand.nextInt(ROWS);
                     
             }
         }
-        // remove collected coins from the board
-        coins.removeAll(collectedCoins);
+        // edited in favor of the "respawn" mechanic but kept to use later | remove collected coins from the board
+        // coins.removeAll(collectedCoins);
     }
 
 }
