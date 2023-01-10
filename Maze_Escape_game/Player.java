@@ -52,7 +52,7 @@ public class Player {
         // every keyboard get has a certain code. get the value of that code from the
         // keyboard event so that we can compare it to KeyEvent constants
         int key = e.getKeyCode();
-        System.out.println("caarls");
+        System.out.println(key);
         // depending on which arrow key was pressed, we're going to move the player by
         // one whole tile for this input
         // Arrow keys and WASD keys
