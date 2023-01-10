@@ -1,0 +1,12 @@
+Maze Escape v0.0.1
+
+1. Open the game
+    Open "run_game.bat" to open the game.
+
+2. Play the game
+    Use the arrow keys or the WASD keys to move the character across the board.
+    Collect coins to increase score, coins will respawn after collection.
+    The score gained by the coins increases after every coin you have collected.
+
+3. Finish
+    There is no ending to the game so it only ends when you close the window or command prompt.
