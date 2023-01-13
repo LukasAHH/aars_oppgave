@@ -10,8 +10,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     private final int DELAY = 25;
     // controls the size of the board
     public static final int TILE_SIZE = 50;
-    public static final int ROWS = 12;
-    public static final int COLUMNS = 18;
+    public static final int ROWS = 16;
+    public static final int COLUMNS = 28;
     // controls how many coins appear on the board
     public static final int NUM_COINS = 5;
     // suppress serialization warning
@@ -21,12 +21,33 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     // case we need access to it in another method
     private Timer timer;
     // objects that appear on the game board
-    private Player player;
-    private ArrayList<Coin> coins;
+    public static Player player;
+    public static ArrayList<Coin> coins;
+    // variables to contain the layout of each level
+    // private static Levels levels;
     // coin initial value and inflation rate
     private float coinValue = 100f;
     private float inflationRate = 1.02f;
     private int coinScore;
+
+    // layout for level one using multidimensional array
+    private int[][] levelOne = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,2,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
 
     public Board() {
         // set the game board size
@@ -46,8 +67,6 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // this method is called by the timer every DELAY ms.
-        // use this space to update the state of your game or animation
-        // before the graphics are redrawn.
 
         // prevent the player from disappearing off the board
         player.tick();
@@ -159,34 +178,60 @@ public class Board extends JPanel implements ActionListener, KeyListener {
                 int coinY = rand.nextInt(ROWS);
                 coinList.add(new Coin(coinX, coinY));
             }
-            System.out.println(coinList);
             return coinList;
         }
-        private void collectCoins() {
-            // allow player to pickup coins
-            // ArrayList<Coin> collectedCoins = new ArrayList<>();
-            Random rand = new Random();
+    private void collectCoins() {
+        // allow player to pickup coins
+        // ArrayList<Coin> collectedCoins = new ArrayList<>();
+        Random rand = new Random();
 
-            for (Coin coin : coins) {
-                // if the player is on the same tile as a coin, collect it
-                if (player.getPos().equals(coin.getPos())) {
-                    // give the player some points for picking this up
-                    coinScore = (int) coinValue;
-                    player.addScore(coinScore);
-                    // collectedCoins.add(coin);
-                    coinValue = coinValue * inflationRate;
-                    System.out.print(coin);
-                    System.out.print(" ");
-                    System.out.println(coin.pos);
-                    
-                    // move coin to new spot to simulate it respawning
-                    coin.pos.x = rand.nextInt(COLUMNS);
-                    coin.pos.y = rand.nextInt(ROWS);
-                    
+        for (Coin coin : coins) {
+            // if the player is on the same tile as a coin, collect it
+            if (player.getPos().equals(coin.getPos())) {
+                // give the player some points for picking this up
+                coinScore = (int) coinValue;
+                player.addScore(coinScore);
+                // collectedCoins.add(coin);
+                coinValue *= inflationRate;
+                
+                // move coin to new spot to simulate it respawning
+                coin.pos.x = rand.nextInt(COLUMNS);
+                coin.pos.y = rand.nextInt(ROWS);
+                
+        }
+    }
+        // commented out in favor of the "respawn" mechanic but kept to use later | remove collected coins from the board
+        // coins.removeAll(collectedCoins);
+    }
+    public static boolean checkIfPlayerOnWall() {
+        boolean playerOnWall = false;
+        // currently using the coins as a substitute for walls
+        for (Coin coin : coins) {
+            if (player.getPos().equals(coin.getPos())) {
+                playerOnWall = true;
+            }
+            
+            
+        }
+        return playerOnWall;
+    }
+    private ArrayList<Coin> populateLevel() {
+        ArrayList<Coin> coinList = new ArrayList<>();
+        for (int y = 0; y < levelOne.length; ++y) {
+            for (int x = 0; x < levelOne[y].length; ++x) {
+                switch (levelOne[y][x]) {
+                    case 0:
+                        break;
+                    case 1:
+                        coinList.add(new Coin(x, y));
+                        break;
+                    case 2:
+                        player.setPos(x, y);
+                        break;
+                }
             }
         }
-        // edited in favor of the "respawn" mechanic but kept to use later | remove collected coins from the board
-        // coins.removeAll(collectedCoins);
+        return coinList;
     }
 
 }

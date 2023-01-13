@@ -3,8 +3,10 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.Point;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 public class Player {
@@ -16,8 +18,9 @@ public class Player {
     // keep track of the player's score
     private int score;
     // recording movement to stop character at walls
-    private int lastMove;
-    private int lastAxis;
+    private int[] lastPos = {0,0};
+
+    private int key;
 
     public Player() {
         // load the assets
@@ -30,98 +33,101 @@ public class Player {
 
     private void loadImage() {
         try {
-            // you can use just the filename if the image file is in your
-            // project folder, otherwise you need to provide the file path.
-            image = ImageIO.read(new File("images/player.png"));
+            // loading player icon
+            image = ImageIO.read(new File("images/player.jpg"));
         } catch (IOException exc) {
             System.out.println("Error opening image file: " + exc.getMessage());
         }
     }
 
     public void draw(Graphics g, ImageObserver observer) {
-        // with the Point class, note that pos.getX() returns a double, but 
-        // pos.x reliably returns an int. https://stackoverflow.com/a/30220114/4655368
-        // this is also where we translate board grid position into a canvas pixel
-        // position by multiplying by the tile size.
+        // used to resize the image used as player icon
+        // Image.SCALE_SMOOTH used instead of Image.SCALE_DEFAULT or others for a better quality image when resizing
+        Image newImage = image.getScaledInstance(Board.TILE_SIZE, Board.TILE_SIZE, Image.SCALE_SMOOTH);
+        // using pos.x instead of pos.getX() in order to recieve an int rather than a double
         g.drawImage(
-            image, 
-            pos.x * Board.TILE_SIZE, 
-            pos.y * Board.TILE_SIZE, 
+            newImage,
+            pos.x * Board.TILE_SIZE,
+            pos.y * Board.TILE_SIZE,
             observer
         );
     }
-    
+
     public void keyPressed(KeyEvent e) {
-        // every keyboard get has a certain code. get the value of that code from the
         // keyboard event so that we can compare it to KeyEvent constants
-        int key = e.getKeyCode();
-        // depending on which arrow key was pressed, we're going to move the player by
-        // one whole tile for this input
-        // Arrow keys and WASD keys
-        switch (key) {
-            case (KeyEvent.VK_UP):
-                // pos.translate(0, -1);
-                // lastMove = 1;
-                // lastAxis = 0;
-                // break;
-            case (KeyEvent.VK_W):
-                pos.translate(0, -1);
-                lastMove = 1;
-                lastAxis = 0;
-                break;
-            case (KeyEvent.VK_LEFT):
-                pos.translate(-1, 0);
-                lastMove = 1;
-                lastAxis = 1;
-                break;
-            case (KeyEvent.VK_A):
-                pos.translate(-1, 0);
-                lastMove = 1;
-                lastAxis = 1;
-                break;
-            case (KeyEvent.VK_DOWN):
-                pos.translate(0, 1);
-                lastMove = -1;
-                lastAxis = 0;
-                break;
-            case (KeyEvent.VK_S):
-                pos.translate(0, 1);
-                lastMove = -1;
-                lastAxis = 0;
-                break;
-            case (KeyEvent.VK_RIGHT):
-                pos.translate(1, 0);
-                lastMove = -1;
-                lastAxis = 1;
-                break;
-            case (KeyEvent.VK_D):
-                pos.translate(1, 0);
-                lastMove = -1;
-                lastAxis = 1;
-                break;
-            }
-        System.out.println(lastMove);
-        System.out.println(lastAxis);
-        System.out.println("bababooey");
-    }
-
-    public void tick() {
-        // this gets called once every tick, before the repainting process happens.
-        // so we can do anything needed in here to update the state of the player.
-
+        key = e.getKeyCode();
+        // recording position before movement to send the player back if entering a wall
+        lastPos[0] = pos.x;
+        lastPos[1] = pos.y;
+        // checking what way to move based on the key pressed
+        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
+            pos.translate(0, -1);
+        } else if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
+            pos.translate(-1, 0);
+        } else if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
+            pos.translate(0, 1);
+        } else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
+            pos.translate(1, 0);
+        } 
         // prevent the player from moving off the edge of the board sideways
-        if (pos.x < 0) {
-            pos.x = 0;
-        } else if (pos.x >= Board.COLUMNS) {
-            pos.x = Board.COLUMNS - 1;
-        }
-        // prevent the player from moving off the edge of the board vertically
-        if (pos.y < 0) {
-            pos.y = 0;
-        } else if (pos.y >= Board.ROWS) {
-            pos.y = Board.ROWS - 1;
-        }
+        if (pos.x < 0 || pos.x >= Board.COLUMNS || pos.y < 0 || pos.y >= Board.ROWS) {
+            pos.x = lastPos[0];    
+            pos.y = lastPos[1];    
+        } 
+        // will allow me to add walls for the maze later
+        // if (Board.checkIfPlayerOnWall()) {
+        //     pos.x = lastPos[0];
+        //     pos.y = lastPos[1];
+        // }
 
+        // ************ OLD CODE **********************
+        // switch (key) {
+        //     case (KeyEvent.VK_UP):
+        //         pos.translate(0, -1);
+        //         lastMove = 1;
+        //         lastAxis = 0;
+        //         break;
+        //     case (KeyEvent.VK_W):
+        //         pos.translate(0, -1);
+        //         lastMove = 1;
+        //         lastAxis = 0;
+        //         break;
+        //     case (KeyEvent.VK_LEFT):
+        //         pos.translate(-1, 0);
+        //         lastMove = 1;
+        //         lastAxis = 1;
+        //         break;
+        //     case (KeyEvent.VK_A):
+        //         pos.translate(-1, 0);
+        //         lastMove = 1;
+        //         lastAxis = 1;
+        //         break;
+        //     case (KeyEvent.VK_DOWN):
+        //         pos.translate(0, 1);
+        //         lastMove = -1;
+        //         lastAxis = 0;
+        //         break;
+        //     case (KeyEvent.VK_S):
+        //         pos.translate(0, 1);
+        //         lastMove = -1;
+        //         lastAxis = 0;
+        //         break;
+        //     case (KeyEvent.VK_RIGHT):
+        //         pos.translate(1, 0);
+        //         lastMove = -1;
+        //         lastAxis = 1;
+        //         break;
+        //     case (KeyEvent.VK_D):
+        //         pos.translate(1, 0);
+        //         lastMove = -1;
+        //         lastAxis = 1;
+        //         break;
+        //     }
+        // ******************************************
+    }
+    
+    public void tick() {
+        
     }
 
     public String getScore() {
@@ -134,6 +140,11 @@ public class Player {
 
     public Point getPos() {
         return pos;
+    }
+
+    public void setPos(int x, int y) {
+        pos.x = x;
+        pos.y = y;
     }
 
 }

@@ -1,0 +1,4 @@
+Create Wall.java for the actual walls
+return Coins to be normal coins that can be collected
+add door that is used to exit level
+create interactive start screen for player to sit in before playing the game

@@ -1,0 +1,18 @@
+
+** Note ** game is still in extremely early stages of development and has not
+** Note ** implemented the "Maze" or "Escape" parts of the game yet
+
+Maze Escape v0.0.2
+
+Changed player icon to a scaled down image of a cat temporarily
+Coins can no longer be collected and are now walls that prevent the player from moving further
+Added a simplistic and early stage level design and a way to draw the level
+
+Fixed a glitch where the player could clip into walls
+
+
+Maze Escape v0.0.1
+
+Player may run around using WASD and arrow keys to collect coins that increases the score
+Coins respawn infinitely and coin value increases after each collection
+Coin are currently blue triangles

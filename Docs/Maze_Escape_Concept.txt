@@ -2,9 +2,46 @@ Maze escape
 
 Navigate the maze while avoiding traps and collecting key fragments to aid your escape
 
-Arrow traps:
-    Regularly shoots arrows that will kill the player and restart the game
-Key fragments:
+Player (eleP):
+    the playable character, the one you move around and control
+
+Arrow traps (eleAt0/eleAt1/eleAt2/eleAt3):
+    Regularly shoots arrows that will kill the player and reselert the game
+    need 
+
+Key fragments (eleKf):
     Collecting all of these will change the color of the door and allow you to pass through and win
-Golden coins:
+
+Golden coins (eleGc):
     Extra collectibles for extra gratification or adding to some score
+
+Empty = 0
+Wall = 1
+Player = 2
+Coin = 3
+Fragment = 4
+ArrowUp = 5
+ArrowLeft = 6
+ArrowDown = 7
+ArrowRight = 8
+Exit door = 9
+
+variable to store lvl info?
+private String[] levelOne = {
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}
+    {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,2,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+}
