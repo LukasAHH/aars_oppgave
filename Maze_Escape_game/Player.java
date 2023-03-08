@@ -75,10 +75,10 @@ public class Player {
             pos.y = lastPos[1];    
         } 
         // will allow me to add walls for the maze later
-        // if (Board.checkIfPlayerOnWall()) {
-        //     pos.x = lastPos[0];
-        //     pos.y = lastPos[1];
-        // }
+        if (Board.checkIfPlayerOnWall()) {
+            pos.x = lastPos[0];
+            pos.y = lastPos[1];
+        }
 
         // ************ OLD CODE **********************
         // switch (key) {

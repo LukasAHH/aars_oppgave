@@ -2,17 +2,17 @@ Maze escape
 
 Navigate the maze while avoiding traps and collecting key fragments to aid your escape
 
-Player (eleP):
+Player :
     the playable character, the one you move around and control
 
-Arrow traps (eleAt0/eleAt1/eleAt2/eleAt3):
+Arrow traps :
     Regularly shoots arrows that will kill the player and reselert the game
     need 
 
-Key fragments (eleKf):
+Key fragments :
     Collecting all of these will change the color of the door and allow you to pass through and win
 
-Golden coins (eleGc):
+Golden coins :
     Extra collectibles for extra gratification or adding to some score
 
 Empty = 0

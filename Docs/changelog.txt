@@ -2,6 +2,13 @@
 ** Note ** game is still in extremely early stages of development and has not
 ** Note ** implemented the "Maze" or "Escape" parts of the game yet
 
+Maze Escape v0.0.3
+
+Added new wall object
+Coins now are collectables again
+Coins move to new position upon collection
+
+
 Maze Escape v0.0.2
 
 Changed player icon to a scaled down image of a cat temporarily

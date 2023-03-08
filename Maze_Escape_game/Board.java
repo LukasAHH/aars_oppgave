@@ -20,57 +20,41 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     // keep a reference to the timer object that triggers actionPerformed() in
     // case we need access to it in another method
     private Timer timer;
+    int[][] level;
     // objects that appear on the game board
     public static Player player;
     public static ArrayList<Coin> coins;
+    public static ArrayList<Wall> walls;
     // variables to contain the layout of each level
     // private static Levels levels;
     // coin initial value and inflation rate
     private float coinValue = 100f;
     private float inflationRate = 1.02f;
     private int coinScore;
-
-    // layout for level one using multidimensional array
-    private int[][] levelOne = {
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,2,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
-
+    
     public Board() {
         // set the game board size
         setPreferredSize(new Dimension(TILE_SIZE * COLUMNS, TILE_SIZE * ROWS));
         // set the game board background color
         setBackground(new Color(232, 232, 232));
-
+        
         // initialize the game state
         player = new Player();
-        coins = populateCoins();
+        level = Levels.getLevel(0);
+        populateLevel(level);
 
         // this timer will call the actionPerformed() method every DELAY ms
         timer = new Timer(DELAY, this);
         timer.start();
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         // this method is called by the timer every DELAY ms.
-
+        
         // prevent the player from disappearing off the board
         player.tick();
-
+        
         // give the player points for collecting coins
         collectCoins();
 
@@ -89,11 +73,14 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // draw our graphics.
         drawBackground(g);
-        drawScore(g);
+        for (Wall wall : walls) {
+            wall.draw(g, this);
+        }
+        player.draw(g, this);
         for (Coin coin : coins) {
             coin.draw(g, this);
         }
-        player.draw(g, this);
+        drawScore(g);
 
         // this smooths out animations on some systems
         Toolkit.getDefaultToolkit().sync();
@@ -114,7 +101,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
         // react to key up events
     }
-
+    
     private void drawBackground(Graphics g) {
         // draw a checkered background
         g.setColor(new Color(214, 214, 214));
@@ -128,33 +115,33 @@ public class Board extends JPanel implements ActionListener, KeyListener {
                         row * TILE_SIZE,
                         TILE_SIZE,
                         TILE_SIZE
-                    );
+                        );
+                    }
                 }
             }
         }
-    }
-
-    private void drawScore(Graphics g) {
-        // set the text to be displayed
-        String text = "$" + player.getScore();
-        // we need to cast the Graphics to Graphics2D to draw nicer text
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
-            RenderingHints.KEY_TEXT_ANTIALIASING,
-            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2d.setRenderingHint(
-            RenderingHints.KEY_RENDERING,
-            RenderingHints.VALUE_RENDER_QUALITY);
-        g2d.setRenderingHint(
-            RenderingHints.KEY_FRACTIONALMETRICS,
-            RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        // set the text color and font
-        g2d.setColor(new Color(30, 201, 139));
-        g2d.setFont(new Font("Lato", Font.BOLD, 25));
-        // draw the score in the bottom center of the screen
-        // https://stackoverflow.com/a/27740330/4655368
-        FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
-        // the text will be contained within this rectangle.
+        
+        private void drawScore(Graphics g) {
+            // set the text to be displayed
+            String text = "$" + player.getScore();
+            // we need to cast the Graphics to Graphics2D to draw nicer text
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                g2d.setRenderingHint(
+                    RenderingHints.KEY_RENDERING,
+                    RenderingHints.VALUE_RENDER_QUALITY);
+                    g2d.setRenderingHint(
+                        RenderingHints.KEY_FRACTIONALMETRICS,
+                        RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+                        // set the text color and font
+                        g2d.setColor(new Color(30, 201, 139));
+                        g2d.setFont(new Font("Lato", Font.BOLD, 25));
+                        // draw the score in the bottom center of the screen
+                        // https://stackoverflow.com/a/27740330/4655368
+                        FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
+                        // the text will be contained within this rectangle.
         // here I've sized it to be the entire bottom row of board tiles
         Rectangle rect = new Rectangle(0, TILE_SIZE * (ROWS - 1), TILE_SIZE * COLUMNS, TILE_SIZE);
         // determine the x coordinate for the text
@@ -165,21 +152,26 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         // draw the string
         g2d.drawString(text, x, y);
     }
+    
+    // ******************************
+    // old code from old version
 
-    private ArrayList<Coin> populateCoins() {
-        ArrayList<Coin> coinList = new ArrayList<>();
-        Random rand = new Random();
+    // private ArrayList<Coin> populateCoins() {
+    //     ArrayList<Coin> coinList = new ArrayList<>();
+    //     Random rand = new Random();
+        
+    //     // create the given number of coins in random positions on the board.
+    //     // note that there is not check here to prevent two coins from occupying the same
+    //     // spot, nor to prevent coins from spawning in the same spot as the player
+    //     for (int i = 0; i < NUM_COINS; i++) {
+    //         int coinX = rand.nextInt(COLUMNS);
+    //         int coinY = rand.nextInt(ROWS);
+    //         coinList.add(new Coin(coinX, coinY));
+    //         }
+    //         return coinList;
+    //     }
+    // ******************************
 
-        // create the given number of coins in random positions on the board.
-        // note that there is not check here to prevent two coins from occupying the same
-        // spot, nor to prevent coins from spawning in the same spot as the player
-            for (int i = 0; i < NUM_COINS; i++) {
-                int coinX = rand.nextInt(COLUMNS);
-                int coinY = rand.nextInt(ROWS);
-                coinList.add(new Coin(coinX, coinY));
-            }
-            return coinList;
-        }
     private void collectCoins() {
         // allow player to pickup coins
         // ArrayList<Coin> collectedCoins = new ArrayList<>();
@@ -195,19 +187,33 @@ public class Board extends JPanel implements ActionListener, KeyListener {
                 coinValue *= inflationRate;
                 
                 // move coin to new spot to simulate it respawning
-                coin.pos.x = rand.nextInt(COLUMNS);
-                coin.pos.y = rand.nextInt(ROWS);
+
+                // boolean coinNotMoved = true;
+                while (true) {
+
+                    int posX = rand.nextInt(COLUMNS);
+                    int posY = rand.nextInt(ROWS);
+
+                    if (level[posY][posX] != 1) {
+                        coin.pos.x = posX;
+                        coin.pos.y = posY;
+                        // coinNotMoved = false;
+                        break;
+                    }
+                    System.out.println("coin moved");
+                }
+
                 
         }
     }
-        // commented out in favor of the "respawn" mechanic but kept to use later | remove collected coins from the board
+        // may be commented out in favor of the "respawn" mechanic | remove collected coins from the board
         // coins.removeAll(collectedCoins);
     }
     public static boolean checkIfPlayerOnWall() {
         boolean playerOnWall = false;
         // currently using the coins as a substitute for walls
-        for (Coin coin : coins) {
-            if (player.getPos().equals(coin.getPos())) {
+        for (Wall wall : walls) {
+            if (player.getPos().equals(wall.getPos())) {
                 playerOnWall = true;
             }
             
@@ -215,23 +221,28 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         }
         return playerOnWall;
     }
-    private ArrayList<Coin> populateLevel() {
+    private void populateLevel(int[][] level) {
         ArrayList<Coin> coinList = new ArrayList<>();
-        for (int y = 0; y < levelOne.length; ++y) {
-            for (int x = 0; x < levelOne[y].length; ++x) {
-                switch (levelOne[y][x]) {
+        ArrayList<Wall> wallList = new ArrayList<>();
+        for (int y = 0; y < level.length; ++y) {
+            for (int x = 0; x < level[y].length; ++x) {
+                switch (level[y][x]) {
                     case 0:
                         break;
                     case 1:
-                        coinList.add(new Coin(x, y));
+                        wallList.add(new Wall(x, y));
                         break;
                     case 2:
                         player.setPos(x, y);
                         break;
+                    case 3:
+                        coinList.add(new Coin(x, y));
+                        break;
                 }
             }
         }
-        return coinList;
+        coins = coinList;
+        walls = wallList;
     }
 
 }
