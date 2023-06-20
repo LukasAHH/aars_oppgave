@@ -2,6 +2,12 @@
 ** Note ** game is still in extremely early stages of development and has not
 ** Note ** implemented the "Maze" or "Escape" parts of the game yet
 
+Maze Escape v0.0.4
+
+Added the door which sends the player to a level
+Added 'level selector' level with multiple doors to choose the next level, one of which, is the 'level selector' level
+
+
 Maze Escape v0.0.3
 
 Added new wall object

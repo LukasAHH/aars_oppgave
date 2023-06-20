@@ -1,13 +1,12 @@
 Maze escape
 
-Navigate the maze while avoiding traps and collecting key fragments to aid your escape
+Navigate the maze filled with boxes. Solve puzzles and build the key by collecting fragments to advance!
 
 Player :
     the playable character, the one you move around and control
 
-Arrow traps :
-    Regularly shoots arrows that will kill the player and reselert the game
-    need 
+Box :
+    Boxes than act as walls but can be pushed if path is not blocked
 
 Key fragments :
     Collecting all of these will change the color of the door and allow you to pass through and win
@@ -20,10 +19,7 @@ Wall = 1
 Player = 2
 Coin = 3
 Fragment = 4
-ArrowUp = 5
-ArrowLeft = 6
-ArrowDown = 7
-ArrowRight = 8
+
 Exit door = 9
 
 variable to store lvl info?

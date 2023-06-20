@@ -20,6 +20,8 @@ public class Player {
     // recording movement to stop character at walls
     private int[] lastPos = {0,0};
 
+    public KeyEvent pressedKey;
+    public int isKeyPressed = 0;
     private int key;
 
     public Player() {
@@ -31,10 +33,10 @@ public class Player {
         score = 0;
     }
 
-    private void loadImage() {
+    public void loadImage() {
         try {
             // loading player icon
-            image = ImageIO.read(new File("images/player.jpg"));
+                image = ImageIO.read(new File("images/player.jpg"));
         } catch (IOException exc) {
             System.out.println("Error opening image file: " + exc.getMessage());
         }
@@ -51,6 +53,7 @@ public class Player {
             pos.y * Board.TILE_SIZE,
             observer
         );
+
     }
 
     public void keyPressed(KeyEvent e) {
@@ -74,60 +77,18 @@ public class Player {
             pos.x = lastPos[0];    
             pos.y = lastPos[1];    
         } 
-        // will allow me to add walls for the maze later
+        // keeps the player off walls and closed doors
         if (Board.checkIfPlayerOnWall()) {
             pos.x = lastPos[0];
             pos.y = lastPos[1];
         }
-
-        // ************ OLD CODE **********************
-        // switch (key) {
-        //     case (KeyEvent.VK_UP):
-        //         pos.translate(0, -1);
-        //         lastMove = 1;
-        //         lastAxis = 0;
-        //         break;
-        //     case (KeyEvent.VK_W):
-        //         pos.translate(0, -1);
-        //         lastMove = 1;
-        //         lastAxis = 0;
-        //         break;
-        //     case (KeyEvent.VK_LEFT):
-        //         pos.translate(-1, 0);
-        //         lastMove = 1;
-        //         lastAxis = 1;
-        //         break;
-        //     case (KeyEvent.VK_A):
-        //         pos.translate(-1, 0);
-        //         lastMove = 1;
-        //         lastAxis = 1;
-        //         break;
-        //     case (KeyEvent.VK_DOWN):
-        //         pos.translate(0, 1);
-        //         lastMove = -1;
-        //         lastAxis = 0;
-        //         break;
-        //     case (KeyEvent.VK_S):
-        //         pos.translate(0, 1);
-        //         lastMove = -1;
-        //         lastAxis = 0;
-        //         break;
-        //     case (KeyEvent.VK_RIGHT):
-        //         pos.translate(1, 0);
-        //         lastMove = -1;
-        //         lastAxis = 1;
-        //         break;
-        //     case (KeyEvent.VK_D):
-        //         pos.translate(1, 0);
-        //         lastMove = -1;
-        //         lastAxis = 1;
-        //         break;
-        //     }
-        // ******************************************
+        isKeyPressed = 0;
     }
     
     public void tick() {
-        
+        if (isKeyPressed != 0) {
+            keyPressed(pressedKey);
+        }
     }
 
     public String getScore() {

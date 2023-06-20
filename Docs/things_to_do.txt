@@ -1,9 +1,16 @@
-***COMPLETE*** Create Wall.java for the actual walls
-***COMPLETE*** return Coins to be normal coins that can be collected
+***COMPLETE***
+
+Create Wall.java for the actual walls
+return Coins to be normal coins that can be collected
 
 
+FIX - make movement when holding key smoother
 
 
 add door that is used to exit level
 create level selection screen
+
+***COMPLETE***
+
 create home menu
+create pushable box object
